@@ -1,7 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 
 import 'package:api/Models/posts_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
@@ -35,7 +38,30 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text("Api Integration"),
       ),
       body: Column(
-        children: [Text("Api Integration")],
+        children: [
+          Expanded(
+            child: FutureBuilder(
+                future: getPostApi(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    return ListView.builder(
+                        itemCount: postList.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                              child: ListTile(
+                            leading: Text(
+                              postList[index].id.toString(),
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            title: Text(postList[index].title.toString()),
+                          ));
+                        });
+                  }
+                }),
+          )
+        ],
       ),
     );
   }
